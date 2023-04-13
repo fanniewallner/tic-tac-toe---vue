@@ -3,16 +3,8 @@ import { computed } from '@vue/reactivity';
 import { ref } from 'vue';
 import { Player } from '../models/Player';
 
-function restartGrid() {
-    cells.value = [
-        ['', '', ''],
-        ['', '', ''],
-        ['', '', '']
-    ];
-}
 
-const player = ref('X')
-//const player = ref(new Player("X", 0))
+const player = ref('X' ? 'O' : 'X')
 
 const cells = ref([
     ['', '', ''],
@@ -35,7 +27,7 @@ const isWinner = (cells: string[]) => {
 const winner = computed(() => isWinner(cells.value.flat()))
 
 const move = (x: number, y: number) => {
-    if (winner.value || cells.value[x][y]) return
+    if (winner.value) return
     cells.value[x][y] = player.value
     player.value = player.value === 'O' ? 'X' : 'O'
 }
@@ -45,14 +37,20 @@ function handleMove(event: MouseEvent) {
     if (winner.value) return
     const [rowIndex, cellIndex] = cellId.split('-')
     move(Number(rowIndex), Number(cellIndex))
-    console.log('Cell ID:', cellId);
 }
 
-
+function restartGrid() {
+    cells.value = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+    ];
+}
 </script>
 
 <template>
     <div id="grid-template">
+        <p v-if="!winner"> Player {{ player }}'s turn</p>
         <div class="row" v-for="(row, rowIndex) in cells" :key="rowIndex">
             <div class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex" :id="`${rowIndex}-${cellIndex}`"
                 :class="{ 'cell-x': cell === 'X', 'cell-o': cell === 'O' }" @click="handleMove">
@@ -60,7 +58,7 @@ function handleMove(event: MouseEvent) {
         </div>
     </div>
     <button @click="restartGrid">Restart game</button>
-    <p v-if="winner">Congratulations!! The winner is {{ winner }}</p>
+    <p class="winner" v-if="winner">Congratulations!! The winner is {{ winner }}</p>
 </template>
 
 <style scoped>
@@ -83,8 +81,6 @@ function handleMove(event: MouseEvent) {
     display: inline-block;
 }
 
-
-
 .cell-x::before {
     content: "X";
     font-size: 40px;
@@ -96,4 +92,8 @@ function handleMove(event: MouseEvent) {
     font-size: 40px;
     font-weight: bolder;
 }
-</style>
+
+.winner {
+    font-size: 20px;
+    font-weight: bolder;
+}</style>

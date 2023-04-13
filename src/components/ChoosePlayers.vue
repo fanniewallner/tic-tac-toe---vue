@@ -5,7 +5,7 @@ import { ref } from 'vue';
 const usernameX = ref("")
 const usernameO = ref("")
 
-const emit = defineEmits(["startGame"])
+defineEmits(["startGame"])
 
 
 </script>
@@ -23,7 +23,5 @@ const emit = defineEmits(["startGame"])
 <style scoped>
 .playBtn {
     display: block;
-    display: flex;
-    justify-content: center;
 }
 </style>
