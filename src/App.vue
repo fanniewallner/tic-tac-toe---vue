@@ -22,13 +22,15 @@ let show = ref(true)
 </script>
 
 <template>
-  <h1>Tic-Tac-Toe</h1>
-  <div id="body">
-    <ChoosePlayers v-if="show" @add-player="addPlayer">
-    </ChoosePlayers>
-    <GridComponent v-else :players="currentPlayers">
-      <ScoreBoard></ScoreBoard>
-    </GridComponent>
+  <div class="container">
+    <h1>Tic-Tac-Toe</h1>
+    <div id="body">
+      <ChoosePlayers v-if="show" @add-player="addPlayer">
+      </ChoosePlayers>
+      <GridComponent v-else :players="currentPlayers">
+        <ScoreBoard></ScoreBoard>
+      </GridComponent>
+    </div>
   </div>
 </template>
 
