@@ -3,8 +3,12 @@ import { computed } from '@vue/reactivity';
 import { ref } from 'vue';
 import { Player } from '../models/Player';
 
-function saveToLS() {
+defineEmits(["showScore"]);
 
+let currentPlayers = ref<Player[]>(JSON.parse(localStorage.getItem("playerStats") || "[]"))
+
+function saveStats(currentPlayers: Player[]) {
+    localStorage.setItem("playerStats", JSON.stringify(currentPlayers))
 }
 
 interface IShowPlayerProps {
@@ -25,7 +29,6 @@ const cells = ref([
     ['', '', ''],
 ])
 
-const wonGame = (computed(() => isWinner(cells.value.flat()))) //state?
 const winner = computed(() => isWinner(cells.value.flat()))
 
 const isWinner = (cells: string[]) => {
@@ -47,8 +50,18 @@ const playerMove = (x: number, y: number) => {
     player.value = player.value === 'O' ? 'X' : 'O'
     if (winner.value) {
         currentPlayer.value.score += 1
-        console.log(currentPlayer.value)
-        //SET LS
+
+        let foundPlayer = false
+        for (let i = 0; i < currentPlayers.value.length; i++) {
+            if (currentPlayers.value[i].username === currentPlayer.value.username) {
+                currentPlayers.value[i].score = currentPlayer.value.score
+                foundPlayer = true
+            }
+        }
+        if (!foundPlayer) {
+            currentPlayers.value.push(currentPlayer.value)
+        }
+        saveStats(currentPlayers.value)
         return
     }
     toggleCurrentPlayer()
@@ -70,13 +83,12 @@ function restartGrid() {
     ];
     player.value = player.value === 'O' ? 'X' : 'O'
 }
-
 </script>
 
 
 <template>
     <div id="grid-template">
-        <p v-if="!wonGame"> {{ currentPlayer.username }}'s turn</p>
+        <p v-if="!winner"> {{ currentPlayer.username }}'s turn</p>
         <div class="row" v-for="(row, rowIndex) in cells" :key="rowIndex">
             <div class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex" :id="`${rowIndex}-${cellIndex}`"
                 :class="{ 'cell-x': cell === 'X', 'cell-o': cell === 'O' }" @click="handleMove">
@@ -85,7 +97,7 @@ function restartGrid() {
         </div>
     </div>
     <button @click="restartGrid">Restart game</button>
-    <button>Show score</button>
+    <button @click="$emit('showScore')">Show score</button>
     <button>New players</button>
     <p class="winner" v-if="winner">Congratulations!! The winner is {{ currentPlayer.username }}</p>
 </template>
