@@ -1,3 +1,3 @@
 export class Player {
-    constructor(public username: string, public score: number) {}
+    constructor(public username: string, public score:number) {}
   }

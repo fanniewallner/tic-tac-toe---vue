@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Player } from '../models/Player';
 
-//const player = ref<Player[]>
 const usernameX = ref("")
 const usernameO = ref("")
 
-defineEmits(["startGame"])
-
+defineEmits(["start-game", "add-player"]);
 
 </script>
 
 <template>
     <p>Spelare X: {{ usernameX }}</p>
-    <form @submit.prevent="() => $emit('addPlayer', usernameX)">
+    <form @submit.prevent="$emit('add-player', usernameX, usernameO)">
         <input type="text" placeholder="Enter name" v-model="usernameX">
         <p>Spelare O: {{ usernameO }}</p>
         <input type="text" placeholder="Enter name" v-model="usernameO">
-        <button class="playBtn" @click="() => $emit('startGame', usernameX, usernameO)">Play</button>
+        <button class="playBtn">Play</button>
     </form>
 </template>
 
