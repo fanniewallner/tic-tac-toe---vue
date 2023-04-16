@@ -111,6 +111,7 @@ function restartGrid() {
     align-items: center;
     justify-content: center;
     margin-top: 10px;
+    min-width: 400px;
     padding: 32px;
     background-color: #f2f2f2;
     border-radius: 8px;
@@ -125,8 +126,8 @@ function restartGrid() {
     border: 2px solid black;
     background-color: white;
     padding: 10px;
-    height: 100px;
-    width: 100px;
+    height: 80px;
+    width: 80px;
     font-size: 60px;
     display: flex;
     align-items: center;
@@ -159,7 +160,7 @@ function restartGrid() {
 }
 
 .winner {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bolder;
     margin-top: 20px;
 }
