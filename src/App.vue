@@ -5,6 +5,15 @@ import ScoreBoard from './components/ScoreBoard.vue';
 import { Player } from './models/Player';
 import { ref } from 'vue';
 
+const newPlayers = () => {
+  show.value = true
+  localStorage.clear()
+}
+
+const resumeGame = () => {
+  showScoreToggle.value = false
+}
+
 //let currentPlayers = ref<Player[]>(JSON.parse(localStorage.getItem("playerStats") || "[]"))
 let currentPlayers = ref<Player[]>([])
 
@@ -32,13 +41,51 @@ let show = ref(true)
   <div class="container">
     <h1>Tic-Tac-Toe</h1>
     <div id="body">
-      <ChoosePlayers v-if="show" @add-player="addPlayer">
+      <ChoosePlayers class="choose-players" v-if="show" @add-player="addPlayer">
       </ChoosePlayers>
-      <GridComponent v-else v-if="!showScoreToggle" :players="currentPlayers" @show-score="showScore">
+      <GridComponent v-else v-if="!showScoreToggle" :players="currentPlayers" @show-score="showScore"
+        @new-players="newPlayers">
       </GridComponent>
-      <ScoreBoard v-if="showScoreToggle" :players="currentPlayers"></ScoreBoard>
+      <ScoreBoard class="score-board" v-if="showScoreToggle" :players="currentPlayers" @resume-game="resumeGame">
+      </ScoreBoard>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+#body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.choose-players {
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.grid-component {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1em;
+}
+
+.score-board {
+  margin-top: 1em;
+}
+</style>

@@ -3,7 +3,7 @@ import { computed } from '@vue/reactivity';
 import { ref } from 'vue';
 import { Player } from '../models/Player';
 
-defineEmits(["showScore"]);
+defineEmits(["showScore", "newPlayers"]);
 
 let currentPlayers = ref<Player[]>(JSON.parse(localStorage.getItem("playerStats") || "[]"))
 
@@ -87,8 +87,9 @@ function restartGrid() {
 
 
 <template>
-    <div id="grid-template">
-        <p v-if="!winner"> {{ currentPlayer.username }}'s turn</p>
+    <div id="gridTemplate">
+        <p class="winner" v-if="winner">Congratulations!! The winner is {{ currentPlayer.username }}</p>
+        <p class="currentPlayer" v-if="!winner"> {{ currentPlayer.username }}'s turn</p>
         <div class="row" v-for="(row, rowIndex) in cells" :key="rowIndex">
             <div class="cell" v-for="(cell, cellIndex) in row" :key="cellIndex" :id="`${rowIndex}-${cellIndex}`"
                 :class="{ 'cell-x': cell === 'X', 'cell-o': cell === 'O' }" @click="handleMove">
@@ -96,30 +97,42 @@ function restartGrid() {
             </div>
         </div>
     </div>
-    <button @click="restartGrid">Restart game</button>
-    <button @click="$emit('showScore')">Show score</button>
-    <button>New players</button>
-    <p class="winner" v-if="winner">Congratulations!! The winner is {{ currentPlayer.username }}</p>
+    <div class="buttons">
+        <button @click="restartGrid">Restart game</button>
+        <button @click="$emit('showScore')">Show score</button>
+        <button @click="$emit('newPlayers')">New players</button>
+    </div>
 </template>
 
 <style scoped>
-.grid-template {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+#gridTemplate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 32px;
+    background-color: #f2f2f2;
+    border-radius: 8px;
 }
 
 .row {
     display: flex;
+    flex-direction: row;
 }
 
 .cell {
     border: 2px solid black;
     background-color: white;
     padding: 10px;
-    height: 70px;
-    width: 70px;
-    display: inline-block;
+    height: 100px;
+    width: 100px;
+    font-size: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
 }
 
 .cell:hover {
@@ -130,16 +143,43 @@ function restartGrid() {
     content: "X";
     font-size: 40px;
     font-weight: bolder;
+    color: #5e83a1;
 }
 
 .cell-o::before {
     content: "O";
     font-size: 40px;
     font-weight: bolder;
+    color: #344859;
+}
+
+.currentPlayer {
+    font-weight: bolder;
+    font-size: 20px;
 }
 
 .winner {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bolder;
+    margin-top: 20px;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #5e83a1;
+}
+
+.buttons button {
+    margin: 0 1px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #5e83a1;
+    color: white
 }
 </style>
