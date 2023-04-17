@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Player } from '../models/Player';
+
 
 defineEmits(["showScore", "newPlayers"]);
 
@@ -81,7 +82,9 @@ function restartGrid() {
         ['', '', ''],
         ['', '', '']
     ];
-    player.value = player.value === 'O' ? 'X' : 'O'
+    if (currentPlayer.value === props.players[0]) {
+        toggleCurrentPlayer()
+    }
 }
 </script>
 
